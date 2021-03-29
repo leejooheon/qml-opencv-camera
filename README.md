@@ -69,3 +69,17 @@ $ cmake \
 -D BUILD_NEW_PYTHON_SUPPORT=ON \
 ../opencv-3.4.10/ 2>&1 | tee cmake_messages.txt
 ```
+
+3. Compile and install
+```
+# find out the number of CPU cores in your machine
+$ nproc
+
+# substitute 2 after -j by the output of nproc
+$ make -j2 2>&1 | tee build_messages.txt
+$ sudo make install
+$ sudo ldconfig
+
+# If the output of next command is '3.4.10' then it's ok!
+$ pkg-config --modversion opencv
+```
