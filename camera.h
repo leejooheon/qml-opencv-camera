@@ -1,9 +1,8 @@
-#ifndef OZRAYCAMERA_H
-#define OZRAYCAMERA_H
+#ifndef CAMERA_H
+#define CAMERA_H
 #include <QObject>
 #include <QThread>
 #include <opencv2/opencv.hpp>
-#include "videomanager.h"
 
 class Camera : public QThread
 {
@@ -11,13 +10,12 @@ class Camera : public QThread
 public:
     Camera();
     ~Camera() override;
-    void setVideoManager(VideoManager* _videoManager) {videoManager = _videoManager;}
 
 protected:
     void run() override;
 
-private:
-    VideoManager* videoManager;
+signals:
+    void updateCameraFrame(cv::Mat mat);
 };
 
-#endif // OZRAYCAMERA_H
+#endif // CAMERA_H

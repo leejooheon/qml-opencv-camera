@@ -3,48 +3,30 @@
 
 VideoManager::VideoManager(QObject *parent) : QObject(parent)
 {
+    mCamera = std::unique_ptr<Camera>(new Camera());
+    QObject::connect(mCamera.get(), &Camera::updateCameraFrame,
+                     this,          &VideoManager::frameReceived);
 }
 
 VideoManager::~VideoManager()
 {
-    std::cout << "Destory video manager." << std::endl;
+    qDebug() << Q_FUNC_INFO << "Destory VideoManager.";
+    QObject::disconnect(mCamera.get(), &Camera::updateCameraFrame,
+                        this,          &VideoManager::frameReceived);
 }
 
-void VideoManager::initialization() {
-    isFrameReady = false;
-    timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(process()));
-    timer->start(25);
-}
-
-void VideoManager::frameReceived(const cv::Mat &rtspFrame, const cv::Mat &thermalFrame) {
-    if(isFrameReady)
-        return;
-    cv::Mat image(rtspFrame);
-    cv::Mat thermalImage(thermalFrame);
-
-    if (!image.empty() && !thermalImage.empty()) {
-        normalQimage = Mat2QImage(image);
-        isFrameReady = true;
-    }
-}
-
-void VideoManager::process() {
-    if(!isFrameReady)
-        return;
-
-    if(mainCameraProducer == nullptr) //|| thermalCameraProducer == nullptr)
-        return;
-
-    mainCameraProducer->updateFrame(normalQimage.copy());
-//    thermalCameraProducer->updateFrame(thermalQimage.copy());
-
-    isFrameReady = false;
+void VideoManager::frameReceived(const cv::Mat &frame) {
+    cv::Mat image(frame);
+    mCameraProducer->updateFrame(Mat2QImage(image));
 }
 
 void VideoManager::setCameraProducer(VideoProducer* producer) {
-    mainCameraProducer = producer;
+    mCameraProducer = producer;
     initialization();
+}
+
+void VideoManager::initialization() {
+    mCamera->start();
 }
 
 QImage VideoManager::Mat2QImage(const cv::Mat &src)

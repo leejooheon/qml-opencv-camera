@@ -3,7 +3,7 @@
 #include <QQmlContext>
 #include <QQmlComponent>
 #include "videoproducer.h"
-#include "camera.h"
+#include "videomanager.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,17 +11,10 @@ int main(int argc, char *argv[])
 
     QGuiApplication app(argc, argv);
 
-    std::shared_ptr<VideoManager> videoManager = std::make_shared<VideoManager>();
+    std::unique_ptr<VideoManager> videoManager = std::unique_ptr<VideoManager>(new VideoManager());
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("videoManager", videoManager.get());
     qmlRegisterType<VideoProducer>("VideoProducer", 0, 1, "VideoProducer");
-
-
-    Camera *camera_thread = new Camera;
-    camera_thread->setVideoManager(videoManager.get());
-    QObject::connect(camera_thread, &Camera::finished, camera_thread, &QObject::deleteLater);
-
-    camera_thread->start();
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

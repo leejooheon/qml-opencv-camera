@@ -2,13 +2,12 @@
 #include <QString>
 #include "camera.h"
 
-Camera::Camera()
-{
-
+Camera::Camera(){
+    qDebug() << Q_FUNC_INFO;
+    qRegisterMetaType<cv::Mat>("cv::Mat");
 }
 
-Camera::~Camera()
-{
+Camera::~Camera(){
     qDebug() << Q_FUNC_INFO;
 }
 
@@ -36,7 +35,7 @@ void Camera::run()
                 normal_video.release();
                 continue;
             }
-            videoManager->frameReceived(normal_frame.clone(), normal_frame.clone());
+            emit updateCameraFrame(normal_frame.clone());
         } catch (cv::Exception& e) {
             normal_video.release();
         } catch (...) {
