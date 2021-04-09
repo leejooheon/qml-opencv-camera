@@ -25,7 +25,6 @@ void VideoManager::frameReceived(const cv::Mat &rtspFrame, const cv::Mat &therma
 
     if (!image.empty() && !thermalImage.empty()) {
         normalQimage = Mat2QImage(image);
-        thermalQimage = Mat2QImage(thermalImage);
         isFrameReady = true;
     }
 }
@@ -43,13 +42,9 @@ void VideoManager::process() {
     isFrameReady = false;
 }
 
-void VideoManager::setMainCameraProducer(VideoProducer* producer) {
+void VideoManager::setCameraProducer(VideoProducer* producer) {
     mainCameraProducer = producer;
     initialization();
-}
-
-void VideoManager::setThermalCameraProducer(VideoProducer* producer) {
-    thermalCameraProducer = producer;
 }
 
 QImage VideoManager::Mat2QImage(const cv::Mat &src)

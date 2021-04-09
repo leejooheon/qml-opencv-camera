@@ -13,7 +13,7 @@ Window {
 
         Component.onCompleted: {
             console.log("mainVideoProducer: onCompleted")
-            videoManager.setMainCameraProducer(mainVideoProvider.getVideoProducer())
+            videoManager.setCameraProducer(mainVideoProvider.getVideoProducer())
         }
     }
 }
