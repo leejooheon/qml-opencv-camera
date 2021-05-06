@@ -20,17 +20,21 @@ public:
 public:
     explicit VideoManager(QObject *parent = nullptr);
     ~VideoManager();
-    void frameReceived(const cv::Mat &frame);
-    Q_INVOKABLE void setCameraProducer(VideoProducer* producer);
 
 private:
     static const std::string TAG;
     std::unique_ptr<Camera> mCamera;
     VideoProducer* mCameraProducer = nullptr;
 
+public:
+    Q_INVOKABLE void setCameraProducer(VideoProducer* producer);
+
 private:
     void initialization();
     QImage Mat2QImage(const cv::Mat &src);
+
+private slots:
+    void frameReceived(const cv::Mat &frame);
 
 };
 #endif // THREADMANAGER_HPP
