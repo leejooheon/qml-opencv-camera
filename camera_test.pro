@@ -1,4 +1,4 @@
-QT += quick widgets qml x11extras multimedia # for qml
+QT += quick widgets qml multimedia # for qml
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -13,22 +13,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        camera.cpp \
         main.cpp \
+        camera.cpp \
         videomanager.cpp \
         videoproducer.cpp
-
-RESOURCES += qml.qrc
-
-unix: CONFIG += link_pkgconfig
-unix: PKGCONFIG += opencv spdlog
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
     camera.h \
     videomanager.h \
     videoproducer.h
+
+RESOURCES += qml.qrc
+
+# using pkgconfig
+unix: CONFIG += link_pkgconfig
+unix: PKGCONFIG += opencv
+
+# your own opencv
+#INCLUDEPATH += '/path/to/opencv/include' \
+#               '/path/to/opencv/include/opencv'
+#DEPENDPATH += '/path/to/opencv/include' \
+#              '/path/to/opencv/include/opencv'
+#LIBS += -L'/path/to/opencv/lib' -lopencv_core -lopencv_imgproc -lopencv_imgcodecs -lopencv_videoio
